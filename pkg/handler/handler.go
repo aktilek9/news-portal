@@ -7,15 +7,12 @@ import (
 )
 
 type Handler struct {
-	Service service.Service
+	service service.Service
 }
 
-func NewHandler(service service.Service) *Handler {
-	return &Handler{Service: service}
+func newHandler(service service.Service) *Handler {
+	return &Handler{service: service}
 }
 
-func (h *Handler) InitRoutes() *gin.Engine {
-	router := gin.New()
-
-	return router
+func (h *Handler) TestFunc(c *gin.Context) {
 }

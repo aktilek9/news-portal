@@ -7,4 +7,5 @@ type News struct {
 	Title    string `json:"title"`
 	Content  string `json:"content"`
 	AuthorID uint   `json:"author_id"`
+	Comments []Comment `json:"comments"`
 }
