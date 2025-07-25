@@ -19,7 +19,7 @@ func (h *Handler) Login(c *gin.Context) {
 	token, err := h.service.Login(body.Email, body.Password)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "failed to login",
+			"error": err.Error(),
 		})
 		return
 	}
@@ -39,7 +39,6 @@ func (h *Handler) Register(c *gin.Context) {
 	}
 
 	userDTO := dto.UserDto{
-		Role:     body.Role,
 		Email:    body.Email,
 		Password: body.Password,
 	}

@@ -34,10 +34,10 @@ func main() {
 
 	router := gin.New()
 
-	jwt := jwt.NewJWTService("abcd")
+	jwt := jwt.NewJWTService(os.Getenv("JWT_SECRET"))
 	repos := repository.NewRepository(db)
 	service := service.NewService(repos, jwt)
-	handler.RegisterEndpoint(router, service)
+	handler.RegisterEndpoint(router, service, jwt)
 
 	server := new(news_portal.Server)
 	if err := server.Run("8080", router); err != nil {

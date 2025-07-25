@@ -38,7 +38,7 @@ func (s *service) Register(userDto *dto.UserDto) (int, error) {
 	}
 
 	user := &models.User{
-		Role:     userDto.Role,
+		Role:     "client",
 		Email:    userDto.Email,
 		Password: passwordHash,
 	}
