@@ -36,6 +36,7 @@ func (h *Handler) Register(c *gin.Context) {
 	userDTO := dto.UserDto{
 		Email:    body.Email,
 		Password: body.Password,
+		Role:     body.Role,
 	}
 
 	id, err := h.service.Register(&userDTO)
