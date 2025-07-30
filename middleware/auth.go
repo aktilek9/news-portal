@@ -48,3 +48,11 @@ func UserIdentify(jwt jwt.JWTService) gin.HandlerFunc {
 		c.Next()
 	}
 }
+
+func GetUserID(c *gin.Context) (int, error) {
+	userID, err := strconv.Atoi(c.GetHeader(userCtx))
+	if err != nil {
+		return -1, err
+	}
+	return userID, nil
+}

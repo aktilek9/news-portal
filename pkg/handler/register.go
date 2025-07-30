@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"news-portal/middleware"
 	"news-portal/pkg/jwt"
 	"news-portal/pkg/service"
 
@@ -12,8 +13,17 @@ func RegisterEndpoint(router *gin.Engine, service service.Service, jwt jwt.JWTSe
 
 	authGroup := router.Group("/auth")
 	{
-		// authGroup.Use(middleware.UserIdentify(jwt))
 		authGroup.POST("/login", h.Login)
 		authGroup.POST("/register", h.Register)
+	}
+
+	newsGroup := router.Group("/news")
+	newsGroup.Use(middleware.UserIdentify(jwt))
+	{
+		newsGroup.GET("/", h.GetAllNews)
+		newsGroup.GET("/:id", h.GetNewsByID)  
+		newsGroup.POST("/",middleware.CheckPermission([]string{"admin", "manager"}), h.CreateNews)      // Only manager 
+		newsGroup.PUT("/:id", h.UpdateNews)    // Only the author of the news
+		newsGroup.DELETE("/:id", h.DeleteNews) // Only the author of the news
 	}
 }

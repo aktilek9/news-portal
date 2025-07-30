@@ -3,6 +3,7 @@ package handler
 import (
 	"net/http"
 	"news-portal/dto"
+	"news-portal/pkg/response"
 
 	"github.com/gin-gonic/gin"
 )
@@ -10,21 +11,17 @@ import (
 func (h *Handler) Login(c *gin.Context) {
 	var body LoginUserRequest
 	if err := c.BindJSON(&body); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Failed to read body",
-		})
+		response.ErrorResponse(c, response.NewAppError(http.StatusBadRequest, "Failed to read body", err))
 		return
 	}
 
 	token, err := h.service.Login(body.Email, body.Password)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
+		response.ErrorResponse(c, response.NewAppError(http.StatusBadRequest, err.Error(), err))
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
+	response.SuccessResponse(c, http.StatusOK, gin.H{
 		"token": token,
 	})
 }
@@ -32,9 +29,7 @@ func (h *Handler) Login(c *gin.Context) {
 func (h *Handler) Register(c *gin.Context) {
 	var body CreateUserRequest
 	if err := c.BindJSON(&body); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Failed to read body",
-		})
+		response.ErrorResponse(c, response.NewAppError(http.StatusBadRequest, "Failed to read body", err))
 		return
 	}
 
@@ -45,15 +40,11 @@ func (h *Handler) Register(c *gin.Context) {
 
 	id, err := h.service.Register(&userDTO)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Failed to register user",
-		})
+		response.ErrorResponse(c, response.NewAppError(http.StatusBadRequest, "Failed to register user", err))
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"id": id})
+	response.SuccessResponse(c, http.StatusOK, gin.H{
+		"id": id,
+	})
 }
-
-// 1. Get request body,
-// 2. convert request body to user dto
-// 3. send request to service

@@ -20,9 +20,9 @@ func ErrorResponse(c *gin.Context, err error) {
 	})
 }
 
-func ErrorResponseWithAbort(c *gin.Context, code int, msg string) {
+func ErrorResponseWithAbort(c *gin.Context, code int, message string) {
 	c.AbortWithStatusJSON(code, gin.H{
-		"message": msg,
+		"message": message,
 	})
 }
 
