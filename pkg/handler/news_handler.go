@@ -55,12 +55,12 @@ func (h *Handler) CreateNews(c *gin.Context) {
 	}
 
 	news := dto.News{
-		Title:   body.Title,
-		Content: body.Content,
+		Title:    body.Title,
+		Content:  body.Content,
 		AuthorID: authorID,
 	}
 
-	if err := h.service.CreateNews(&news); err != nil {
+	if err := h.service.CreateNews(news); err != nil {
 		response.ErrorResponse(c, response.NewAppError(http.StatusInternalServerError, "Failed to create news", err))
 		return
 	}

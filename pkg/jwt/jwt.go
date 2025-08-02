@@ -30,14 +30,13 @@ func (j *jwtService) GenerateToken(userID int, role string) (string, error) {
 
 	claims := &CustomClaims{
 		UserID: userID,
-		Role: role,
+		Role:   role,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(),
 			IssuedAt:  time.Now().Unix(),
 			Issuer:    "news-portal",
 		},
 	}
-
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
@@ -50,13 +49,13 @@ func (j *jwtService) GenerateToken(userID int, role string) (string, error) {
 }
 
 func (j *jwtService) ParseToken(tokenString string) (int, string, error) {
-	token, err  := jwt.ParseWithClaims(tokenString, &CustomClaims{}, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &CustomClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, jwt.ErrSignatureInvalid
 		}
 		return j.secretKey, nil
 	})
-	
+
 	if err != nil {
 		return 0, "", err
 	}

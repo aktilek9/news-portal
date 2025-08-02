@@ -17,9 +17,13 @@ type Service interface {
 	Register(user *dto.UserDto) (int, error)
 	GetAllNews() ([]models.News, error)
 	GetNewsByID(id int) (models.News, error)
-	CreateNews(news *dto.News) error
+	CreateNews(news dto.News) error
 	UpdateNews(id int, news dto.News) error
 	DeleteNews(id int) error
+	CreateComment(commentDTO dto.CommentDTO) error
+	GetCommentsByNewsID(newsID int) ([]models.Comment, error)
+	GetCommentByID(id int) (models.Comment, error)
+	DeleteComment(id int) error
 }
 
 func NewService(repo repository.Repository, jwt jwt.JWTService) Service {

@@ -21,9 +21,17 @@ func RegisterEndpoint(router *gin.Engine, service service.Service, jwt jwt.JWTSe
 	newsGroup.Use(middleware.UserIdentify(jwt))
 	{
 		newsGroup.GET("/", h.GetAllNews)
-		newsGroup.GET("/:id", h.GetNewsByID)  
-		newsGroup.POST("/",middleware.CheckPermission([]string{"admin", "manager"}), h.CreateNews)      // Only manager 
-		newsGroup.PUT("/:id", h.UpdateNews)    // Only the author of the news
-		newsGroup.DELETE("/:id", h.DeleteNews) // Only the author of the news
+		newsGroup.GET("/:id", h.GetNewsByID)
+		newsGroup.POST("/", middleware.CheckPermission([]string{"admin", "manager"}), h.CreateNews) // Only manager
+		newsGroup.PUT("/:id", h.UpdateNews)                                                         // Only the author of the news
+		newsGroup.DELETE("/:id", h.DeleteNews)                                                      // Only the author of the news
+	}
+
+	commentsGroup := router.Group("/comments")
+	commentsGroup.Use(middleware.UserIdentify(jwt))
+	{
+		commentsGroup.POST("/", h.CreateComment)
+		commentsGroup.GET("/news/:id", h.GetCommentsByNewsID)
+		commentsGroup.DELETE("/:id", h.DeleteComment)
 	}
 }

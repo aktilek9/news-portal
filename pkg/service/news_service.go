@@ -13,10 +13,10 @@ func (s *service) GetNewsByID(id int) (models.News, error) {
 	return s.repo.GetNewsByID(id)
 }
 
-func (s *service) CreateNews(newsDTO *dto.News) error {
+func (s *service) CreateNews(newsDTO dto.News) error {
 	news := models.News{
-		Title: newsDTO.Title,
-		Content: newsDTO.Content,
+		Title:    newsDTO.Title,
+		Content:  newsDTO.Content,
 		AuthorID: uint(newsDTO.AuthorID),
 	}
 	return s.repo.CreateNews(&news)

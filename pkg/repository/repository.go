@@ -19,6 +19,10 @@ type Repository interface {
 	CreateNews(news *models.News) error
 	UpdateNews(id int, news dto.News) error
 	DeleteNews(id int) error
+	CreateComment(comment *models.Comment) error
+	GetCommentsByNewsID(newsID int) ([]models.Comment, error)
+	GetCommentByID(id int) (models.Comment, error)
+	DeleteComment(id int) error
 }
 
 func NewRepository(db *gorm.DB) Repository {

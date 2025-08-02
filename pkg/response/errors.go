@@ -44,4 +44,3 @@ func MapPostgresError(err error) *AppError {
 
 	return NewAppError(http.StatusInternalServerError, "Unknown error", err)
 }
-

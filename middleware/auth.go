@@ -56,3 +56,8 @@ func GetUserID(c *gin.Context) (int, error) {
 	}
 	return userID, nil
 }
+
+func GetUserRole(c *gin.Context) string {
+	userRole := c.GetHeader(roleCtx)
+	return userRole
+}
