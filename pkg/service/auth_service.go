@@ -32,6 +32,10 @@ func (s *service) Register(userDto *dto.UserDto) (int, error) {
 		return 0, errors.New("user with this email already exists")
 	}
 
+	if userDto.Role != "manager" && userDto.Role != "client" {
+		return 0, errors.New("invalid role")
+	}
+
 	passwordHash, err := hashPassword(userDto.Password)
 	if err != nil {
 		return 0, err

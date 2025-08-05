@@ -77,13 +77,30 @@ func (h *Handler) UpdateNews(c *gin.Context) {
 		return
 	}
 
-	var news dto.News
-	if err := c.BindJSON(&news); err != nil {
+	var newsDTO dto.News
+	if err := c.BindJSON(&newsDTO); err != nil {
 		response.ErrorResponse(c, response.NewAppError(http.StatusBadRequest, "Failed to read body", err))
 		return
 	}
 
-	if err := h.service.UpdateNews(id, news); err != nil {
+	userID, err := middleware.GetUserID(c)
+	if err != nil {
+		response.ErrorResponse(c, response.NewAppError(http.StatusForbidden, "Cannot find user ID", err))
+		return
+	}
+
+	news, err := h.service.GetNewsByID(id)
+	if err != nil {
+		response.ErrorResponse(c, response.NewAppError(http.StatusInternalServerError, "Failed to get news", err))
+		return
+	}
+
+	if int(news.AuthorID) != userID {
+		response.ErrorResponse(c, response.NewAppError(http.StatusForbidden, "You are not the author of this news", err))
+		return
+	}
+
+	if err := h.service.UpdateNews(id, newsDTO); err != nil {
 		response.ErrorResponse(c, response.NewAppError(http.StatusInternalServerError, "Failed to update news", err))
 		return
 	}
@@ -97,6 +114,23 @@ func (h *Handler) DeleteNews(c *gin.Context) {
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
 		response.ErrorResponse(c, response.NewAppError(http.StatusBadRequest, "Invalid ID", err))
+		return
+	}
+
+	userID, err := middleware.GetUserID(c)
+	if err != nil {
+		response.ErrorResponse(c, response.NewAppError(http.StatusForbidden, "Cannot find user ID", err))
+		return
+	}
+
+	news, err := h.service.GetNewsByID(id)
+	if err != nil {
+		response.ErrorResponse(c, response.NewAppError(http.StatusInternalServerError, "Failed to get news", err))
+		return
+	}
+
+	if int(news.AuthorID) != userID {
+		response.ErrorResponse(c, response.NewAppError(http.StatusForbidden, "You are not the author of this news", err))
 		return
 	}
 
